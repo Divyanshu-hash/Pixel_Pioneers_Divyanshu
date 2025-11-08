@@ -21,6 +21,6 @@ if (!apiKey) {
 const genAI = new GoogleGenerativeAI(apiKey);
 
 // 3. Get the specific generative model to use for finding resources.
-const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
 
 export { model };

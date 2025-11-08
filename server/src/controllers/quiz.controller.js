@@ -24,3 +24,5 @@ const createQuiz = asyncHandler(async (req, res) => {
 
   return res.status(201).json(new apiResponse(201, quiz, "Quiz created successfully"));
 })
+
+export { createQuiz };

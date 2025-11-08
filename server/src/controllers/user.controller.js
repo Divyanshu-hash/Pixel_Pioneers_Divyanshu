@@ -8,6 +8,32 @@ const options = {
   secure: true,
 };
 
+const generateAccessAndRefreshToken = async (userId) => {
+  try {
+    const user = await User.findOne(userId);
+
+    if (!user) {
+      throw new apiError(404, 'Invalid User Request');
+    }
+
+    const accessToken = await user.generateAccessToken();
+    const refreshToken = await user.generateRefreshToken();
+
+    user.refreshToken = refreshToken;
+    await user.save({ validateBeforeSave: false });
+
+    return {
+      accessToken,
+      refreshToken,
+    };
+  } catch (error) {
+    throw new apiError(
+      500,
+      error.message || 'Something went wrong while genrating refresh and access tokens'
+    );
+  }
+};
+
 const registerUser = asyncHandler(async (req, res) => {
   const { username, email, password, avatarURL } = req.body;
 

@@ -36,7 +36,6 @@ const userSchema = new Schema(
     },
     gender: {
       enum: ["male", "female", "others"],
-      lowercase: true,
     },
     refreshToken: {
       type: String,
