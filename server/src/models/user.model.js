@@ -1,12 +1,11 @@
-import { Schema, model } from 'mongoose';
-import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
+import { Schema, model } from "mongoose";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
-const userSchema = Schema(
+const userSchema = new Schema(
   {
     fullName: {
       type: String,
-      required: true,
       trim: true,
     },
     username: {
@@ -17,14 +16,9 @@ const userSchema = Schema(
       index: true,
       lowercase: true,
     },
-    phoneNumber: {
-      type: String,
-      unique: true,
-      sparse: true,
-    },
     email: {
       type: String,
-      required: [true, 'Email is required'],
+      required: [true, "Email is required"],
       unique: true,
       lowercase: true,
       sparse: true,
@@ -33,7 +27,7 @@ const userSchema = Schema(
     avatarURL: {
       type: String,
       default:
-        'https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/User-avatar.svg/800px-User-avatar.svg.png',
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/User-avatar.svg/800px-User-avatar.svg.png",
     },
     password: {
       required: true,
@@ -41,25 +35,18 @@ const userSchema = Schema(
       minlength: 8,
     },
     gender: {
-      required: true,
-      enum: ["male" , "female" , "others"],
+      enum: ["male", "female", "others"],
       lowercase: true,
-      optional: true,
     },
     refreshToken: {
       type: String,
-      default: '',
     },
-    accessToken: {
-      type: String,
-      default: '',
-    }
   },
   { timestamps: true }
 );
 
-userSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) {
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) {
     return next();
   }
 
@@ -71,7 +58,7 @@ userSchema.methods.isPasswordCorrect = async function (password) {
   return await bcrypt.compare(password, this.password);
 };
 
-userSchema.methods.generateAccessToken = async function () {
+userSchema.methods.generateAccessToken = function () {
   return jwt.sign(
     {
       id: this._id,
@@ -85,7 +72,7 @@ userSchema.methods.generateAccessToken = async function () {
   );
 };
 
-userSchema.methods.generateRefreshToken = async function () {
+userSchema.methods.generateRefreshToken = function () {
   return jwt.sign(
     {
       id: this._id,
@@ -97,4 +84,4 @@ userSchema.methods.generateRefreshToken = async function () {
   );
 };
 
-export const User = model('User', userSchema);
+export const User = model("User", userSchema);
